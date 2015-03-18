@@ -83,15 +83,17 @@ def scrape():
                     html_str3 = resp3.read()
                     table_soup3 = BeautifulSoup(html_str3)
 
-                    id_table = table_soup3.find("table", attrs={"width":"688", "border":"0", "cellpadding":"2", "cellspacing":"0", "class":"table"})
-                    data_table = table_soup3.find("table", attrs={"valign":"top"})
+                    personal_info_table = table_soup3.find("table", attrs={"width":"688", "border":"0", "cellpadding":"2", "cellspacing":"0", "class":"table"})
+                    pi_key_pairs = personal_info_table.findAll("font")
 
-                    id_table_content_soup = id_table
+                    for pi_kp in pi_key_pairs:
+                        print pi_kp.text
 
+                    details_table = table_soup3.find("table", attrs={"width":"90%", "border":"0", "cellspacing":"0", "cellpadding":"1", "class":"t2 table-striped2"})
+                    d_key_pairs = details_table.findAll("font")
 
-                    key_pairs = id_table_content_soup.findAll("font")
+                    for d_kp in d_key_pairs:
+                        print d_kp.text
 
-                    for kp in key_pairs:
-                        print kp.text
 
 scrape()
