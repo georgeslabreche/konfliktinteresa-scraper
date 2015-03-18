@@ -1,7 +1,8 @@
 # konfliktinteresa-scraper
 
-Pre-requisite installation before we can install lxml:
+Scrapes data from http://www.konfliktinteresa.me/new/index.php?option=com_content&view=article&id=160&Itemid=121&lang=me
+
 ```
-sudo apt-get install libxml2-dev libxslt1-dev
-sudo apt-get install zlib1g-dev
+bash install.sh
+bash run.sh
 ```
