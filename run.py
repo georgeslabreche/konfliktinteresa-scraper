@@ -37,20 +37,7 @@ def scrape():
     for funkcioner in vrsta_funkcionera:
         fid = funkcioner[0]
 
-        url = "http://www.konfliktinteresa.me/new/evid_funkc/funkcioneri/EvidencijaFun.php?txtNaziv=&VR_FUN=%i" % fid
-
-        '''
-        page = requests.get('https://api.github.com/user', auth=('user', 'pass'))
-
-        if page.status_code == 200:
-            tree = html.fromstring(page.text)
-            results = tree.xpath("//a[@href=starts-with(name(), 'EvidFunPrijave.php?')]/text()")
-
-            print results
-
-        else:
-            print "%i - Surrogate input contrary to established facts." % (page.status_code) # Logan's Run reference.
-        '''
+        url1 = "http://www.konfliktinteresa.me/new/evid_funkc/funkcioneri/EvidencijaFun.php?txtNaziv=&VR_FUN=%i" % fid
 
         # First level scraping browser.
         br1 = mechanize.Browser()
@@ -70,27 +57,15 @@ def scrape():
         br3.set_handle_refresh(False)  # can sometimes hang without this
         br3.addheaders = [('User-agent', 'Firefox')]
 
-        br1.open(url)
+        br1.open(url1)
         for link in br1.links():
             if link.url.startswith('EvidFunPrijave.php?ID='):
 
-                name_split = link.text.split(' ')
-                official = {}
-                official['full_name'] = link.text
-                official['_id'] = link.url\
+                official_id = link.url\
                     .replace('EvidFunPrijave.php?ID=', '')\
                     .replace(',,','')
 
-                if len(name_split) == 3:
-                    official['designation'] = name_split[0]
-                    official['first_name'] = name_split[1]
-                    official['last_name'] = name_split[2]
-                else:
-                    official['first_name'] = name_split[0]
-                    official['last_name'] = name_split[1]
-
-
-                url2 = 'http://www.konfliktinteresa.me/new/evid_funkc/funkcioneri/EvidFunPrijave.php?ID=' + official['_id']
+                url2 = 'http://www.konfliktinteresa.me/new/evid_funkc/funkcioneri/EvidFunPrijave.php?ID=%s' % official_id
                 resp2 = br2.open(url2)
 
                 html_str2 = resp2.read()
@@ -98,7 +73,7 @@ def scrape():
 
                 result_table2 = table_soup2.find('table', attrs={"class": "t2 table-striped2"})
 
-                table_content_soup2 = BeautifulSoup(str(result_table2))
+                table_content_soup2 = result_table2
                 anchors2 = table_content_soup2.findAll('a', href=lambda x: x and x.startswith('EvidFunPrijavePrikaz.php?ID='))
 
                 for anchor2 in anchors2:
@@ -111,6 +86,12 @@ def scrape():
                     id_table = table_soup3.find("table", attrs={"width":"688", "border":"0", "cellpadding":"2", "cellspacing":"0", "class":"table"})
                     data_table = table_soup3.find("table", attrs={"valign":"top"})
 
-                   //d_table_content = BeautifulSoup(str(id_table))
+                    id_table_content_soup = id_table
+
+
+                    key_pairs = id_table_content_soup.findAll("font")
+
+                    for kp in key_pairs:
+                        print kp.text
 
 scrape()
